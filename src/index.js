@@ -1,14 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import App from './App';
+import 'antd/dist/antd.dark.css';
 import reportWebVitals from './reportWebVitals';
+import { HashRouter, Route, Switch, Redirect } from 'react-router-dom';
+import LoginIndex from "./pages/Login/LoginIndex";
+import HomeIndex from "./pages/Home/HomeIndex";
+import { isLogin } from '../src/utils/tools';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+  <HashRouter>
+    <Switch>
+      <Route path='/admin'><HomeIndex /></Route>
+      <Route path='/login'><LoginIndex /></Route>
+      <Route path='/'><LoginIndex /></Route>
+    </Switch>
     <App />
-  </React.StrictMode>
+  </HashRouter>
 );
 
 // If you want to start measuring performance in your app, pass a function
