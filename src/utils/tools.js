@@ -17,6 +17,9 @@ export function isLogin() {
 //根路径
 export const serverURL = 'http://localhost:1337';
 
+// 图片上传路径
+export const UploadUrl = serverURL + '/api/v1/common/upload_file';
+
 // 处理图片路径问题
 export function resetImgUrl(url) {
     if (url) {

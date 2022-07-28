@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { resetImgUrl } from '../../../utils/tools';
+import UpLoads from './Upload';
 import {
     Table,
     Button,
@@ -8,7 +10,6 @@ import {
     Modal,
     Form,
     Input,
-    Upload,
     Radio,
     Popconfirm
 } from 'antd';
@@ -23,8 +24,8 @@ import {
     PlusOutlined,
     DeleteOutlined,
     EditOutlined,
+    SearchOutlined,
 } from '@ant-design/icons';
-import { resetImgUrl } from '../../../utils/tools';
 
 
 export default function Product() {
@@ -35,13 +36,15 @@ export default function Product() {
     const [currentID, setCurrentID] = useState(-1);
     // 定义一个标识位，如果currentID > -1时，进行添加，如果不大于就进行修改;
     const [myForm] = Form.useForm();  //创建一个表单实例
+    const [imageUrl, setImageUrl] = useState();
+    const [keyWord, setKeyWord] = useState({})
 
     useEffect(() => {
         loadData();
     }, [page]);
 
     const loadData = () => {
-        ProductsAPI(page).then((res) => {
+        ProductsAPI(page, keyWord).then((res) => {
             setDataSource(res.data) // 商品详情数据
             setTotal(res.total) // 商品总数量
         })
@@ -53,93 +56,100 @@ export default function Product() {
         }
     }, [visible]);
 
+    useEffect(() => {
+        // 关键词变了重新加载数据
+        loadData();
+    },[keyWord])
+
     const columns = [
-    {
-        title: '序号',
-        align: 'center',
-        render: (cData, rData, index) => {
-            return index + 1;
+        {
+            title: '序号',
+            align: 'center',
+            render: (cData, rData, index) => {
+                return index + 1;
+            }
+        },
+        {
+            key: 'name',
+            title: '商品名称',
+            dataIndex: 'name',
+            align:'center',
+        },
+        {
+            key: 'desc',
+            title: '描述信息',
+            dataIndex: 'desc',
+            align:'center',
+            render: (cData) => {
+                return cData === '' ? '-' : cData;
+            }
+        },
+        {
+            title: '图片',
+            dataIndex: 'coverImage',
+            key: 'coverImage',
+            align:'center',
+            render: (_, rData) => <img src={resetImgUrl(rData.coverImage)} style={{ width: '100px', height: '100px' }} />
+        },
+        {
+            title: '价格',
+            dataIndex: 'price',
+            key: 'price',
+            align:'center',
+        },
+        {
+            title: '浏览次数',
+            dataIndex: 'views',
+            align:'center',
+            key: 'views',
+        },
+        {
+            title: '是否在售',
+            dataIndex: 'onSale',
+            align:'center',
+            key: 'onSale',
+            render: (cData) => {
+                return cData === 0 ? <span>在售</span> : <span>待售</span>;
+            }
+        },
+        {
+            title: '库存',
+            dataIndex: 'amount',
+            align:'center',
+            key: 'amount',
+        },
+        {
+            title: '操作',
+            dataIndex: 'operation',
+            align:'center',
+            key: 'operation',
+            render: (_, rData) =>
+                    <Space>
+                        <Button
+                            type='primary'
+                            icon={<EditOutlined />}
+                            onClick={() =>
+                            onAmend(rData)} />
+                        <Popconfirm
+                            title="确定要删除吗"
+                            okText="是"
+                            cancelText="否"
+                            onConfirm={async () => {
+                                await DeleteAPI(rData.id);
+                                message.success('删除成功');
+                                loadData();
+                                }}>
+                            <Button icon={ <DeleteOutlined />} type='primary' danger />
+                        </Popconfirm>
+                    </Space>
         }
-    },
-    {
-        key: 'name',
-        title: '商品名称',
-        dataIndex: 'name',
-        align:'center',
-    },
-    {
-        key: 'desc',
-        title: '描述信息',
-        dataIndex: 'desc',
-        align:'center',
-        render: (cData) => {
-            return cData === '' ? '-' : cData;
-        }
-    },
-    {
-        title: '图片',
-        dataIndex: 'coverImage',
-        key: 'coverImage',
-        align:'center',
-        render: (_, rData) => <img src={resetImgUrl(rData.coverImage)} style={{ width: '100px', height: '100px' }} />
-    },
-    {
-        title: '价格',
-        dataIndex: 'price',
-        key: 'price',
-        align:'center',
-    },
-    {
-        title: '浏览次数',
-        dataIndex: 'views',
-        align:'center',
-        key: 'views',
-    },
-    {
-        title: '是否在售',
-        dataIndex: 'onSale',
-        align:'center',
-        key: 'onSale',
-        render: (cData) => {
-            return cData === 0 ? <span>在售</span> : <span>待售</span>;
-        }
-    },
-    {
-        title: '库存',
-        dataIndex: 'amount',
-        align:'center',
-        key: 'amount',
-    },
-    {
-        title: '操作',
-        dataIndex: 'operation',
-        align:'center',
-        key: 'operation',
-        render: (_, rData) =>
-                <Space>
-                    <Button
-                        type='primary'
-                        icon={<EditOutlined />}
-                        onClick={() =>
-                        onAmend(rData)} />
-                    <Popconfirm
-                        title="确定要删除吗"
-                        okText="是"
-                        cancelText="否"
-                        onConfirm={async () => {
-                            await DeleteAPI(rData.id);
-                            message.success('删除成功');
-                            loadData();
-                            }}>
-                        <Button icon={ <DeleteOutlined />} type='primary' danger />
-                    </Popconfirm>
-                </Space>
-        }];
+    ];
 
     // 修改
     const onAmend = async (rData) => {
         const res = await AmendProductAPI(rData.id);
         setCurrentID(rData.id);
+        setImageUrl(rData.coverImage)
         myForm.setFieldsValue(res); // setFieldsValue 设置form表单的默认值
         setVisible(true);
     }
@@ -154,7 +164,19 @@ export default function Product() {
             type='primary'
             onClick={() => {
                 setVisible(true);
-        }} />}>
+                }} />}>
+            <Form
+                layout='inline'
+                onFinish={(values) => {
+                    setKeyWord(values)
+            }}>
+                <Form.Item label='搜索' name= 'name'>
+                    <Input placeholder='请输入关键字进行搜索'/>
+                </Form.Item>
+                <Form.Item>
+                    <Button type='primary' htmlType='submit' icon={ <SearchOutlined/>} />
+                </Form.Item>
+            </Form>
             <Table
                 columns={columns}
                 rowKey='id'
@@ -186,9 +208,9 @@ export default function Product() {
                     form={myForm}
                     onFinish={async (values) => {
                         if (currentID > -1) {
-                            await UploadModalAPI(currentID,values)
+                            await UploadModalAPI(currentID, {...values,coverImage:imageUrl})
                         } else {
-                            await GetProductAPI(values)
+                            await GetProductAPI({...values,coverImage:imageUrl})
                         }
                         message.success('保存成功');
                         loadData();
@@ -203,20 +225,9 @@ export default function Product() {
                     <Form.Item label='描述信息' name='desc' rules = {[{required:true,message: '请输入描述信息!'}]} >
                         <Input />
                     </Form.Item>
-                    {/* <Form.Item label='图片' name='coverImage' rules = {[{required:true,message: '请上传图片!'}]} >
-                        <Upload action="/upload.do" listType="picture-card">
-                            <div>
-                                <PlusOutlined />
-                                <div
-                                style={{
-                                    marginTop: 8,
-                                }}
-                                >
-                                Upload
-                                </div>
-                            </div>
-                        </Upload>
-                    </Form.Item> */}
+                    <Form.Item label='图片' name='coverImage' >
+                        <UpLoads imageUrl={imageUrl} setImageUrl={ setImageUrl } />
+                    </Form.Item>
                     <Form.Item label='价格' name='price' rules = {[{required:true,message: '请输入价格!'}]} >
                         <Input  type='number'/>
                     </Form.Item>
