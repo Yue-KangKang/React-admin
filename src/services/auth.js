@@ -15,6 +15,18 @@ export const GetProductAPI = (data) => post('/api/v1/admin/product', data);
 // 修改商品名称
 export const AmendProductAPI = (data) => put('/api/v1/admin/product/' + data);
 
-// 修改商品名称
+// 修改商品信息
 export const UploadModalAPI = (id, data) => put('/api/v1/admin/product/' + id, data);
+
+// 新增轮播图列表
+export const BannerAPI = (page = 1, query = {}) => get('/api/v1/admin/banner', { page, ...query });
+
+// 新增轮播图
+export const NewBannerAPI = (data) => post('/api/v1/admin/banner', data);
+
+// 修改轮播图信息
+export const UploadBannerAPI = (id, data) => put('/api/v1/admin/banner/' + id, data);
+
+// 删除轮播图信息
+export const DeleteBannerAPI = (id, data) => del('/api/v1/admin/banner/' + id, data);
 

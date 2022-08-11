@@ -20,6 +20,7 @@ const {
     Footer,
     Sider
 } = Layout;
+import BannerCategory from './Bannercategory/BannerCategory'
 
 function HomeIndex() {
     const { push } = useHistory()
@@ -28,10 +29,10 @@ function HomeIndex() {
         <Layout
             style={{
                 minHeight: '100vh',
-        }}>
+            }}>
             <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
                 <div className="logo" />
-                    <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} onClick={({ key }) => { push(key) }} />
+                <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} onClick={({ key }) => { push(key) }} />
             </Sider>
             <Layout className="site-layout">
                 <Header
@@ -65,6 +66,9 @@ function HomeIndex() {
                     </Route>
                     <Route path='/admin/product'>
                         <Product />
+                        </Route>
+                    <Route path='/admin/bannercategory'>
+                        <BannerCategory />
                     </Route>
                 </div>
                 </Content>
@@ -73,7 +77,7 @@ function HomeIndex() {
                     textAlign: 'center',
                 }}
                 >
-                Ant Design ©2018 Created by Ant UED
+                ©后台管理2022
                 </Footer>
             </Layout>
         </Layout>

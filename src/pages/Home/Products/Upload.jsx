@@ -27,7 +27,7 @@ const beforeUpload = (file) => {
 
 const UpLoads = (props) => {
     const [loading, setLoading] = useState(false);
-    const { imageUrl,setImageUrl } = props
+    const { imageUrl, setImageUrl } = props
     const handleChange = (info) => {
         if (info.file.status === 'uploading') {
         setLoading(true);
