@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { resetImgUrl } from '../../../utils/tools';
-import UpLoads from '../Products/Upload';
+import { resetImgUrl } from '@/utils/tools';
+import UpLoads from '@/pages/Home/Products/Upload';
 import {
     Table,
     Button,
@@ -23,7 +23,7 @@ import {
     NewBannerAPI,
     UploadBannerAPI,
     DeleteBannerAPI
-} from '../../../services/auth';
+} from '@/services/auth';
 import {
     PlusOutlined,
     DeleteOutlined,

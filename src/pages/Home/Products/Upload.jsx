@@ -1,7 +1,7 @@
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { message, Upload } from 'antd';
 import React, { useState } from 'react';
-import { UploadUrl, resetImgUrl } from '../../../utils/tools'
+import { UploadUrl, resetImgUrl } from '@/utils/tools'
 
 const getBase64 = (img, callback) => {
     const reader = new FileReader();

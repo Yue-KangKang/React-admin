@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { resetImgUrl } from '../../../utils/tools';
+import { resetImgUrl } from '@/utils/tools';
 import UpLoads from './Upload';
 import {
     Table,
@@ -19,7 +19,7 @@ import {
     GetProductAPI,
     AmendProductAPI,
     UploadModalAPI,
-} from '../../../services/auth';
+} from '@/services/auth';
 import {
     PlusOutlined,
     DeleteOutlined,

@@ -7,8 +7,8 @@ import {
     message
 } from 'antd';
 import './Login.css';
-import { LoginAPI } from '../../services/auth';
-import { setToken } from '../../utils/tools';
+import { LoginAPI } from '@/services/auth';
+import { setToken } from '@/utils/tools';
 import { useHistory } from 'react-router-dom';
 
 function LoginIndex() {
